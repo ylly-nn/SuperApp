@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="364.0" style="-fx-background-color: #98C793; -fx-border-color: #464451;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane layoutX="11.0" layoutY="163.0" prefHeight="240.0" prefWidth="377.0" style="-fx-background-color: #7B917B;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <AnchorPane prefHeight="257.0" prefWidth="339.0" style="-fx-background-color: white; -fx-border-color: #464451; -fx-background-radius: 10; -fx-border-radius: 10;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <opaqueInsets>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </opaqueInsets>
+         <children>
+            <Text layoutX="16.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Операционный системы и оболочки" wrappingWidth="252.7294921875" AnchorPane.topAnchor="48.0" />
+            <Text layoutX="39.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Язык программирования: Java" AnchorPane.topAnchor="71.0" />
+            <Text layoutX="132.0" layoutY="214.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Гридасова Анна" wrappingWidth="159.51513671875" AnchorPane.topAnchor="201.0" />
+            <Text layoutX="142.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Группа ПрИ-22" AnchorPane.topAnchor="230.93310546875" />
+         </children>
+      </AnchorPane>
+   </children>
+   <opaqueInsets>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </opaqueInsets>
+</AnchorPane>

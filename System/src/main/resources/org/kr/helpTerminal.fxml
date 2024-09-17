@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="676.0" prefWidth="604.0" style="-fx-background-color: #98C793; -fx-border-color: #464451;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.kr.controllers.HelpTerminalController">
+   <children>
+      <AnchorPane layoutX="2.0" layoutY="180.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="410.0" prefWidth="510.0" style="-fx-background-color: #7B917B; -fx-border-color: #7B917B;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <AnchorPane layoutX="13.0" layoutY="13.0" prefHeight="200.0" prefWidth="390.0" style="-fx-background-color: white; -fx-border-color: #464451; -fx-background-radius: 10; -fx-border-radius: 10;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <children>
+            <TextArea editable="false" layoutX="30.0" layoutY="30.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: white; -fx-background-color: white;" text="ps:&#10;&#10;Описание: Отображает информацию о текущих запущенных процессах в системе.&#10;Пример использования: ps&#10;Примечание: Показывает PID, пользователя, использование CPU, память и командную строку для каждого процесса.&#10;kill &lt;PID&gt;:&#10;&#10;Описание: Завершает процесс с указанным идентификатором процесса (PID).&#10;Пример использования: kill 1234&#10;Примечание: Для завершения процесса может потребоваться право суперпользователя.&#10;top:&#10;&#10;Описание: Отображает динамическое обновление списка процессов, показывая использование ресурсов системы.&#10;Пример использования: top&#10;Примечание: Для выхода из режима top, нажмите q.&#10;df:&#10;&#10;Описание: Показывает доступное и используемое пространство на файловых системах.&#10;Пример использования: df -h&#10;Примечание: Опция -h отображает информацию в удобочитаемом формате (размеры в MB/GB).&#10;du:&#10;&#10;Описание: Показывает размер каталогов и файлов в текущей директории.&#10;Пример использования: du -sh *&#10;Примечание: Опция -sh суммирует и показывает результаты в удобном для чтения формате.&#10;dmesg:&#10;&#10;Описание: Отображает сообщения ядра, которые часто используются для диагностики аппаратных и программных проблем.&#10;Пример использования: dmesg&#10;Примечание: Вывод может быть длинным. Используйте dmesg | less для постраничного просмотра.&#10;lsblk:&#10;&#10;Описание: Показывает информацию о блочных устройствах, таких как жесткие диски и флеш-накопители.&#10;Пример использования: lsblk&#10;Примечание: Полезно для просмотра структуры дисков и разделов.&#10;iostat:&#10;&#10;Описание: Показывает статистику ввода/вывода для устройств и процессоров.&#10;Пример использования: iostat&#10;Примечание: Для получения более подробной информации используйте iostat -x.&#10;mount &lt;device&gt; &lt;dir&gt;:&#10;&#10;Описание: Монтирует устройство в файловую систему на указанный каталог.&#10;Пример использования: mount /dev/sdb1 /mnt&#10;Примечание: Для выполнения этой команды могут потребоваться права суперпользователя.&#10;umount &lt;dir&gt;:&#10;&#10;Описание: Отмонтирует ранее смонтированное устройство.&#10;Пример использования: umount /mnt&#10;Примечание: Для выполнения этой команды могут потребоваться права суперпользователя.&#10;&#10;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
