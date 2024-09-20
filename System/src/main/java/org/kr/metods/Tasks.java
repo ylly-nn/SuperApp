@@ -3,15 +3,17 @@ package org.kr.metods;
 import org.kr.KRapplication;
 import org.kr.controllers.KRController;
 
-import java.awt.*;
 import java.io.*;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class Tasks {
     public static void Task_18() throws IOException {
+
         String contentToWrite = "";
 
         try {
@@ -39,10 +41,33 @@ public class Tasks {
             e.printStackTrace();
 
         }
-        write(contentToWrite);
+            String filePath =  KRController.path() +"/System/Task18/ipc18";// Укажите путь к вашему файлу
+
+
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+            try  {
+                // Запись содержимого в файл
+                writer.write(contentToWrite);
+            //    System.out.println("Файл успешно записан!");
+
+            } catch (IOException e) {
+                System.err.println("Произошла ошибка при записи в файл: " + e.getMessage());
+
+            }
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+
+            }
+
 
 
     }
+
 
     public static void Task_21() throws IOException {
         String contentToWrite = "";
@@ -66,14 +91,35 @@ public class Tasks {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        write(contentToWrite);
+        String filePath =  KRController.path() +"/System/Task21/ipc21";// Укажите путь к вашему файлу
+
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+        try  {
+            // Запись содержимого в файл
+            writer.write(contentToWrite);
+          //  System.out.println("Файл успешно записан!");
+
+        } catch (IOException e) {
+            System.err.println("Произошла ошибка при записи в файл: " + e.getMessage());
+
+        }
+        try {
+            if (writer != null) {
+                writer.close();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+
+        }
+
 
 
     }
 
     public static void Task_44() throws IOException {
         String startTime=(KRapplication.formattedDateTime);
-        System.out.println(startTime);
+     //   System.out.println(startTime);
         String contentToWrite = "";
         String time = "2024-09-13 20:20:30";
 
@@ -84,7 +130,7 @@ public class Tasks {
             stringList.add(command[i]);
         }
         stringList.add(startTime);
-        System.out.println(stringList);
+      //  System.out.println(stringList);
 
         try {
             // Создаем процесс с заданной командой
@@ -100,7 +146,7 @@ public class Tasks {
                 }
             }
             if (FactList.length()>0) {
-                System.out.println("!: "+FactList);
+         //       System.out.println("!: "+FactList);
                 contentToWrite = "Создан файл: " + FactList.toString();
             }
             else {
@@ -109,46 +155,34 @@ public class Tasks {
 
             // Ожидаем завершения процесса
             int exitCode = process.waitFor();
-            System.out.println("Процесс завершен с кодом: " + exitCode);
+          //  System.out.println("Процесс завершен с кодом: " + exitCode);
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-       write(contentToWrite);
+            String filePath =  KRController.path() +"/System/Task44/ipc44";// Укажите путь к вашему файлу
 
 
-    }
-    public static void write(String contentToWrite) throws IOException {
-        String filePath =  KRController.path() +"/System/Task/ipc";// Укажите путь к вашему файлу
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+            try  {
+                // Запись содержимого в файл
+                writer.write(contentToWrite);
+             //   System.out.println("Файл успешно записан!");
 
-        try {
-            // Открываем файл в режиме записи (если файла не существует, он будет создан)
-            FileWriter fileWriter = new FileWriter(filePath, false); // false означает перезапись файла
-            fileWriter.write(""); // Записываем пустую строку, чтобы очистить файл
-            fileWriter.close();
-            System.out.println("Файл успешно очищен.");
-        } catch (IOException e) {
-            System.out.println("Произошла ошибка при очистке файла: " + e.getMessage());
-        }
+            } catch (IOException e) {
+                System.err.println("Произошла ошибка при записи в файл: " + e.getMessage());
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
-        try  {
-            // Запись содержимого в файл
-            writer.write(contentToWrite);
-            System.out.println("Файл успешно записан!");
-
-        } catch (IOException e) {
-            System.err.println("Произошла ошибка при записи в файл: " + e.getMessage());
-
-        }
-        try {
-            if (writer != null) {
-                writer.close();
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
 
+            }
         }
+
+
     }
 
-}

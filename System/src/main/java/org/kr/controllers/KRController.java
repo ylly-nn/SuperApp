@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.kr.metods.Tasks;
+import org.kr.metods.TaskСonnection;
 import org.kr.metods.Utilites;
 import org.kr.metods.Working_with_files;
 
@@ -24,9 +25,9 @@ public class KRController {
 
     //-------------------------------------------------------------------------------------------------------------
     //Переменные
-    public long Pid18 = 0;
-    public long Pid21 = 0;
-    public long Pid44 = 0;
+    public static long Pid18 = 0;
+    public static long Pid21 = 0;
+    public static long Pid44 = 0;
     public String usbName ="";
     public static String nowPath="";
     @FXML
@@ -155,112 +156,167 @@ public class KRController {
 
     //18) количество запущенных системных процессов
     @FXML
-    public void onProcessTaskMenuItemClick(ActionEvent actionEvent) throws IOException {
+    public void onProcessTaskMenuItemClick(ActionEvent actionEvent) throws IOException, InterruptedException {
 
-        Tasks.Task_18();
+        // Указываем директорию, в которой нужно выполнить команду
+        File dir = new File(path()+"/System/Task18");
 
 
 
-        ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", path()+"/System/Task/out/artifacts/Task_jar/Task.jar");
-        System.out.println(path()+"System/Task/out/artifacts/Task_jar/Task.jar");
-        System.out.println(Pid18);
-        if(Pid18 !=0) {
+
+        // Создаем ProcessBuilder для выполнения команды
+        ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", path() + "/System/Task18/out/artifacts/Task_jar/Task.jar");
+
+        // Устанавливаем рабочую директорию
+        processBuilder.directory(dir);
+
+        // Печатаем путь к JAR файлу для отладки
+     //   System.out.println(path() + "/System/Task/out/artifacts/Task_jar/Task.jar");
+
+        // Выводим текущий PID, если не равен 0 (предыдущий процесс)
+      //  System.out.println("Предыдущий PID: " + Pid18);
+
+        // Если PID процесса не равен 0, завершаем старый процесс
+        if (Pid18 != 0) {
             try {
-                // Запускаем команду в командной строке
-                Process process = Runtime.getRuntime().exec("kill " + Pid18);
-                process.waitFor(); // Ожидаем завершения команды
-                System.out.println("Процесс с PID " + Pid18 + " успешно завершён.");
+                // Запуск команды для завершения процесса с PID18
+                Process killProcess = Runtime.getRuntime().exec("kill " + Pid18);
+                killProcess.waitFor(); // Ожидаем завершения команды
+
+                // Сообщение об успешном завершении процесса
+             //   System.out.println("Процесс с PID " + Pid18 + " успешно завершён.");
             } catch (IOException | InterruptedException e) {
-                System.out.println("Произошла ошибка при завершении процесса: " + e.getMessage());
+                // Сообщение об ошибке при завершении процесса
+             //   System.out.println("Произошла ошибка при завершении процесса: " + e.getMessage());
             }
         }
 
-
+        // Запуск нового процесса
         try {
             Process process = processBuilder.start();
-            Pid18 =process.pid();
-            //InputStream inputStream = process.getInputStream();
-            // InputStream errorStream = process.getErrorStream();
+            Pid18 = process.pid(); // Получаем PID нового процесса
+
+            // Печатаем новый PID процесса
+        //    System.out.println("Запущен новый процесс с PID: " + Pid18);
 
         } catch (IOException e) {
-            // More specific error message
-            throw new RuntimeException("Error starting the process for Task.jar", e);
+            // Сообщение об ошибке запуска нового процесса
+            throw new RuntimeException("Ошибка при запуске Task.jar", e);
         }
-        System.out.println(Pid18);
+        TaskСonnection.connection18();
 
-
+     //   System.out.println("Команда выполнена успешно.");
     }
 
 
     // 21) Состояние беспроводной сети
     @FXML
-    private void onNetworkTaskMenuItemClick(ActionEvent actionEvent) throws IOException {
-        Tasks.Task_21();
-        ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", path()+"/System/Task/out/artifacts/Task_jar/Task.jar");
-        System.out.println(path()+"System/Task/out/artifacts/Task_jar/Task.jar");
-        System.out.println(Pid21);
-        if(Pid21 !=0) {
+    private void onNetworkTaskMenuItemClick(ActionEvent actionEvent) throws IOException, InterruptedException {
+        // Указываем директорию, в которой нужно выполнить команду
+        File dir = new File(path()+"/System/Task21");
+
+
+
+
+        // Создаем ProcessBuilder для выполнения команды
+        ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", path() + "/System/Task21/out/artifacts/Task_jar/Task.jar");
+
+        // Устанавливаем рабочую директорию
+        processBuilder.directory(dir);
+
+        // Печатаем путь к JAR файлу для отладки
+      //  System.out.println(path() + "/System/Task21/out/artifacts/Task_jar/Task.jar");
+
+        // Выводим текущий PID, если не равен 0 (предыдущий процесс)
+     //   System.out.println("Предыдущий PID: " + Pid21);
+
+        // Если PID процесса не равен 0, завершаем старый процесс
+        if (Pid21 != 0) {
             try {
-                // Запускаем команду в командной строке
-                Process process = Runtime.getRuntime().exec("kill " + Pid21);
-                process.waitFor(); // Ожидаем завершения команды
-                System.out.println("Процесс с PID " + Pid21 + " успешно завершён.");
+                // Запуск команды для завершения процесса с PID18
+                Process killProcess = Runtime.getRuntime().exec("kill " + Pid21);
+                killProcess.waitFor(); // Ожидаем завершения команды
+
+                // Сообщение об успешном завершении процесса
+             //   System.out.println("Процесс с PID " + Pid21 + " успешно завершён.");
             } catch (IOException | InterruptedException e) {
-                System.out.println("Произошла ошибка при завершении процесса: " + e.getMessage());
+                // Сообщение об ошибке при завершении процесса
+             //   System.out.println("Произошла ошибка при завершении процесса: " + e.getMessage());
             }
         }
 
-
+        // Запуск нового процесса
         try {
             Process process = processBuilder.start();
-            Pid21 =process.pid();
-            //InputStream inputStream = process.getInputStream();
-            // InputStream errorStream = process.getErrorStream();
+            Pid21 = process.pid(); // Получаем PID нового процесса
+
+            // Печатаем новый PID процесса
+        //    System.out.println("Запущен новый процесс с PID: " + Pid21);
 
         } catch (IOException e) {
-            // More specific error message
-            throw new RuntimeException("Error starting the process for Task.jar", e);
+            // Сообщение об ошибке запуска нового процесса
+            throw new RuntimeException("Ошибка при запуске Task.jar", e);
         }
-        System.out.println(Pid21);
+        TaskСonnection.connection21();
+
+    //    System.out.println("Команда выполнена успешно.");
 
     }
 
 
     //44) Факт создания файлов
     @FXML
-    public void onFactsFilesMenuItemClick(ActionEvent actionEvent) throws IOException {
+    public void onFactsFilesMenuItemClick(ActionEvent actionEvent) throws IOException, InterruptedException {
 
 
         Tasks.Task_44();
-        ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", path()+"/System/Task/out/artifacts/Task_jar/Task.jar");
-        System.out.println(path()+"System/Task/out/artifacts/Task_jar/Task.jar");
-        System.out.println(Pid44);
-        if(Pid44 !=0) {
+        File dir = new File(path()+"/System/Task44");
+
+
+
+
+        // Создаем ProcessBuilder для выполнения команды
+        ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", path() + "/System/Task44/out/artifacts/Task_jar/Task.jar");
+
+        // Устанавливаем рабочую директорию
+        processBuilder.directory(dir);
+
+        // Печатаем путь к JAR файлу для отладки
+     //   System.out.println(path() + "/System/Task44/out/artifacts/Task_jar/Task.jar");
+
+        // Выводим текущий PID, если не равен 0 (предыдущий процесс)
+     //   System.out.println("Предыдущий PID: " + Pid44);
+
+        // Если PID процесса не равен 0, завершаем старый процесс
+        if (Pid44 != 0) {
             try {
-                // Запускаем команду в командной строке
-                Process process = Runtime.getRuntime().exec("kill " + Pid44);
-                process.waitFor(); // Ожидаем завершения команды
-                System.out.println("Процесс с PID " + Pid44 + " успешно завершён.");
+                // Запуск команды для завершения процесса с PID18
+                Process killProcess = Runtime.getRuntime().exec("kill " + Pid44);
+                killProcess.waitFor(); // Ожидаем завершения команды
+
+                // Сообщение об успешном завершении процесса
+             //   System.out.println("Процесс с PID " + Pid44 + " успешно завершён.");
             } catch (IOException | InterruptedException e) {
-                System.out.println("Произошла ошибка при завершении процесса: " + e.getMessage());
+                // Сообщение об ошибке при завершении процесса
+              //  System.out.println("Произошла ошибка при завершении процесса: " + e.getMessage());
             }
         }
 
-
+        // Запуск нового процесса
         try {
             Process process = processBuilder.start();
-            Pid44 =process.pid();
-            //InputStream inputStream = process.getInputStream();
-            // InputStream errorStream = process.getErrorStream();
+            Pid44 = process.pid(); // Получаем PID нового процесса
+
+            // Печатаем новый PID процесса
+         //System.out.println("Запущен новый процесс с PID: " + Pid44);
 
         } catch (IOException e) {
-            // More specific error message
-            throw new RuntimeException("Error starting the process for Task.jar", e);
+            // Сообщение об ошибке запуска нового процесса
+            throw new RuntimeException("Ошибка при запуске Task.jar", e);
         }
-        System.out.println(Pid44);
+        TaskСonnection.connection44();
 
-
-
+    //    System.out.println("Команда выполнена успешно.");
 
     }
 
@@ -310,7 +366,7 @@ public class KRController {
     public void initialize() throws IOException, InterruptedException {
 
         // Инициализация TreeView
-        System.out.println(directoryPath);
+     //   System.out.println(directoryPath);
         File rootDirectory = new File(directoryPath);
         TreeItem<String> rootItem = new TreeItem<>(rootDirectory.getName());
         rootItem.setExpanded(true);
@@ -332,7 +388,7 @@ public class KRController {
             if (newValue!=null){
             String nowValue=newValue.getValue();
             if (newValue.getValue().equals(usbName)){
-                System.out.println(mediaDirectoryPath+usbName);
+               // System.out.println(mediaDirectoryPath+usbName);
                 File mediaDirectory = new File(mediaDirectoryPath+usbName);
                 nowPath=mediaDirectoryPath+usbName;
                 Path.setText("/USB/"+usbName);
@@ -355,7 +411,7 @@ public class KRController {
                 }
                 switch (USBornotUSB) {
                     case "notUSB":
-                        System.out.println(directoryPath + "/" + val + nowValue);
+                    //    System.out.println(directoryPath + "/" + val + nowValue);
                         File selectedDirectory = new File(directoryPath + "/" + val + nowValue);
                         nowPath = directoryPath + "/" + val + nowValue;
                         Path.setText("/SuperApp/"+val + nowValue);
@@ -363,7 +419,7 @@ public class KRController {
                     break;
 
                     case "USB":
-                        System.out.println( mediaDirectoryPath+ "/"+usbName+"/" + val + nowValue);
+                     //   System.out.println( mediaDirectoryPath+ "/"+usbName+"/" + val + nowValue);
                         File mediaDirectory = new File(mediaDirectoryPath+usbName+"/" + val + nowValue);
                         nowPath=mediaDirectoryPath+usbName+"/" + val + nowValue;
                         Path.setText("/USB/"+usbName+"/" + val + nowValue);
@@ -373,7 +429,7 @@ public class KRController {
                 }
             catch (Exception e)
             {
-                System.out.println(newValue.getValue());
+              //  System.out.println(newValue.getValue());
                 File selectedDirectory = new File(directoryPath);
                 nowPath=directoryPath;
                 Path.setText("/SuperApp");
@@ -457,7 +513,7 @@ public class KRController {
         // Получите абсолютный путь к папке
         String basePath= folder.getAbsolutePath();
 
-        System.out.println("Полный путь до папки: " + basePath);
+      //  System.out.println("Полный путь до папки: " + basePath);
         return basePath;
     }
 
@@ -468,7 +524,7 @@ public class KRController {
         WatchService watchService = FileSystems.getDefault().newWatchService();
         path.register(watchService, ENTRY_CREATE, ENTRY_DELETE);
 
-        System.out.println("Мониторинг изменений в: " + path.toString());
+      //  System.out.println("Мониторинг изменений в: " + path.toString());
 
         while (true) {
             WatchKey key = watchService.take();
@@ -494,7 +550,7 @@ public class KRController {
     private void handleUSBChange(WatchEvent.Kind<?> kind, Path fileName) {
         Platform.runLater(() -> {
             String action = (kind == ENTRY_CREATE) ? "подключено" : "отключено";
-            System.out.println("Устройство " + action + ": " + fileName);
+          //  System.out.println("Устройство " + action + ": " + fileName);
 
             // Обновляем дерево
             File rootDirectory = new File(directoryPath);
@@ -520,6 +576,17 @@ public class KRController {
 
             // Заполняем дерево
         });
+    }
+    public static Long getPid18(){
+        return Pid18;
+    }
+
+    public static Long getPid21(){
+        return Pid21;
+    }
+
+    public static Long getPid44(){
+        return Pid44;
     }
 
 
