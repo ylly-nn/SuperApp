@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
@@ -108,10 +110,8 @@ public class KRController {
     //-----------------------------------------------------------------------------------------------------------------
     // Функции связанные с кнопками
 
-    @FXML
-    private void onbuttonOpenButtonClick(ActionEvent actionEvent){
-        Working_with_files.open();
-    }
+
+
 
     @FXML
     private void onLocalTerminalMenuItemClick(ActionEvent actionEvent){
@@ -132,6 +132,130 @@ public class KRController {
     private void onLogMenuItemClick(ActionEvent actionEvent){
         Utilites.LogsLauncher();
     }
+
+
+    //обработчик кнопки поиска
+    @FXML
+    private void onSearchButtonClick(ActionEvent actionEvent) {
+        String searchFileName = Name.getText(); // Получаем имя файла или папки из текстового поля
+        if (searchFileName == null || searchFileName.trim().isEmpty()) {
+            showAlert("Введите название для поиска.");
+            return;
+        }
+
+        File rootDirectory = new File(directoryPath); // Папка SuperApp
+        ObservableList<FileInfo> foundItems = searchFilesAndFolders(rootDirectory, searchFileName);
+
+        if (foundItems.isEmpty()) {
+            showAlert("Файлы или папки с таким именем не найдены.");
+        } else {
+            TableView.setItems(foundItems); // Отображаем найденные файлы и папки в TableView
+        }
+    }
+
+    //поиск файлов
+    private ObservableList<FileInfo> searchFilesAndFolders(File directory, String searchFileName) {
+        ObservableList<FileInfo> foundItems = FXCollections.observableArrayList();
+
+        // Поиск в указанной директории
+        foundItems.addAll(searchInDirectory(directory, searchFileName));
+
+        // Если подключена флешка, выполняем поиск в её директории
+        if (!usbName.isEmpty()) {
+            File usbDirectory = new File(mediaDirectoryPath + usbName);
+            foundItems.addAll(searchInDirectory(usbDirectory, searchFileName));
+        }
+
+        return foundItems;
+    }
+
+    private ObservableList<FileInfo> searchInDirectory(File directory, String searchFileName) {
+        ObservableList<FileInfo> foundItems = FXCollections.observableArrayList();
+
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    foundItems.addAll(searchInDirectory(file, searchFileName)); // Рекурсивный вызов для вложенных папок
+                }
+
+                if (file.getName().toLowerCase().contains(searchFileName.toLowerCase())) {
+                    String fullPath = file.getAbsolutePath();
+                    String superAppRelativePath = fullPath.replace(directoryPath, "SuperApp");
+                    String size = file.isDirectory() ? "Папка" : (file.length() / 1024) + " KB";
+                    Date change = new Date(file.lastModified());
+                    foundItems.add(new FileInfo(superAppRelativePath, size, change));
+                }
+            }
+        }
+        return foundItems;
+    }
+
+
+
+    public void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Результат поиска");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void onPathEntered(ActionEvent actionEvent) {
+        // Получаем введённый пользователем путь
+        String inputPath = Path.getText();
+
+        // Преобразуем введённый путь в абсолютный, добавив корневую директорию SuperApp
+        String absolutePath;
+        if (inputPath.startsWith("/SuperApp")) {
+            absolutePath = directoryPath + inputPath.replace("/SuperApp", "");
+            System.out.println("absolutePath /SuperApp: "+absolutePath);
+        } else if (inputPath.startsWith("/USB") && !usbName.isEmpty()) {
+            absolutePath = mediaDirectoryPath + usbName + inputPath.replace("/USB/" + usbName, "");
+            System.out.println("absolutePath /USB: " + absolutePath);
+
+        } else {
+            // Если путь не начинается с SuperApp или USB, показываем ошибку
+            showError("Неверный путь. Путь должен начинаться с '/SuperApp' или 'USB/'.");
+            return;
+        }
+
+        File fileOrDirectory = new File(absolutePath);
+        if (fileOrDirectory.exists()) {
+            if (fileOrDirectory.isDirectory()) {
+                // Если это папка, отображаем её содержимое в таблице
+                nowPath = absolutePath;
+                populateTableView(fileOrDirectory);
+            } else {
+                // Если это файл, открываем родительскую папку и выделяем файл
+                nowPath = fileOrDirectory.getParent();
+                populateTableView(new File(nowPath));
+
+                // Логика для выделения файла в таблице
+                ObservableList<FileInfo> items = TableView.getItems();
+                for (FileInfo fileInfo : items) {
+                    if (fileInfo.getName().endsWith(fileOrDirectory.getName())) {
+                        TableView.getSelectionModel().select(fileInfo);
+                        break;
+                    }
+                }
+            }
+        } else {
+            showError("Путь не найден: " + inputPath);
+        }
+    }
+
+    // Метод для отображения ошибок пользователю
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Ошибка");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
 
     //Справка -> О приложении
     public void onInfoMenuItemClick(ActionEvent actionEvent) {
@@ -320,6 +444,29 @@ public class KRController {
 
     }
 
+    public void onLeftMouseButtonClick(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void onNameEnter(ActionEvent actionEvent) {
+        String searchFileName = Name.getText(); // Получаем имя файла или папки из текстового поля
+        if (searchFileName == null || searchFileName.trim().isEmpty()) {
+            showAlert("Введите название для поиска.");
+            return;
+        }
+
+        File rootDirectory = new File(directoryPath); // Папка SuperApp
+        ObservableList<FileInfo> foundItems = searchFilesAndFolders(rootDirectory, searchFileName);
+
+        if (foundItems.isEmpty()) {
+            showAlert("Файлы или папки с таким именем не найдены.");
+        } else {
+            TableView.setItems(foundItems); // Отображаем найденные файлы и папки в TableView
+        }
+    }
+
+
+
 
 //---------------------------------------------------------------------------------------------------------------------
     //работа с подгрузкой данных в окно
@@ -439,6 +586,118 @@ public class KRController {
         }}
         );
 
+        TreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            String parnt = "";
+            String val = "";
+            String USBornotUSB ="";
+
+            if (newValue!=null){
+                String nowValue=newValue.getValue();
+                if (newValue.getValue().equals(usbName)){
+                    // System.out.println(mediaDirectoryPath+usbName);
+                    File mediaDirectory = new File(mediaDirectoryPath+usbName);
+                    nowPath=mediaDirectoryPath+usbName;
+                    Path.setText("/USB/"+usbName);
+                    populateTableView(mediaDirectory);
+                }
+                else {
+                    try {
+                        while (!parnt.equals("SuperApp")) {
+                            parnt = newValue.getParent().getValue();
+                            if (parnt.equals(usbName)){
+                                USBornotUSB="USB";
+                                break;
+                            }
+                            if (parnt.equals("SuperApp")) {
+                                USBornotUSB="notUSB";
+                                break;
+                            }
+                            val = parnt + "/" + val;
+                            newValue = newValue.getParent();
+                        }
+                        switch (USBornotUSB) {
+                            case "notUSB":
+                                //    System.out.println(directoryPath + "/" + val + nowValue);
+                                File selectedDirectory = new File(directoryPath + "/" + val + nowValue);
+                                nowPath = directoryPath + "/" + val + nowValue;
+                                Path.setText("/SuperApp/"+val + nowValue);
+                                populateTableView(selectedDirectory);
+                                break;
+
+                            case "USB":
+                                //   System.out.println( mediaDirectoryPath+ "/"+usbName+"/" + val + nowValue);
+                                File mediaDirectory = new File(mediaDirectoryPath+usbName+"/" + val + nowValue);
+                                nowPath=mediaDirectoryPath+usbName+"/" + val + nowValue;
+                                Path.setText("/USB/"+usbName+"/" + val + nowValue);
+                                populateTableView(mediaDirectory);
+                                break;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        //  System.out.println(newValue.getValue());
+                        File selectedDirectory = new File(directoryPath);
+                        nowPath=directoryPath;
+                        Path.setText("/SuperApp");
+                        populateTableView(selectedDirectory);
+                    }
+                }
+            }}
+        );
+
+
+
+
+        TreeView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Двойной клик
+                TreeItem<String> selectedItem = TreeView.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    Working_with_files.openTreeView(); // Запуск команды открытия файла
+                }
+            }
+        });
+
+        //нажатие мыши в TableView
+        TableView.setOnMouseClicked(event -> {
+
+            // Обработка двойного клика
+            if (event.getClickCount() == 2) {
+                String localPath = "";
+                System.out.println("Двойной клик"); // Двойной клик
+
+                // Получаем выбранный элемент
+                FileInfo selectedItem = TableView.getSelectionModel().getSelectedItem();
+
+                if (selectedItem != null) {
+                    // Формируем путь к выбранному файлу/папке
+                    File selectedFile = new File(nowPath + "/" + selectedItem.getName());
+                    System.out.println(selectedFile.toString());
+
+                    // Если это папка, обновляем отображение в TableView
+                    if (selectedFile.isDirectory()) {
+                        nowPath = selectedFile.getPath();
+                        localPath = nowPath;
+
+                        // Находим индекс "SuperApp" в пути и обрезаем его
+                        int index = localPath.indexOf("SuperApp");
+                        if (index != -1) {
+                            localPath = nowPath.substring(index);
+                            System.out.println(localPath);
+                        }
+
+                        // Обновляем текстовое поле Path и таблицу
+                        Path.setText(localPath);
+                        populateTableView(selectedFile);
+                    } else {
+                        // Если это файл, открываем его с помощью программы по умолчанию
+                        Working_with_files.openTableView(selectedFile.getPath());
+                    }
+                }
+            }
+        });
+
+
+
         File mediaDirectory = new File(mediaDirectoryPath);
         File[] usbDrives = mediaDirectory.listFiles();
         if (usbDrives != null) {
@@ -489,10 +748,10 @@ public class KRController {
         ObservableList<FileInfo> fileList = FXCollections.observableArrayList();
         if (files != null) {
             for (File file : files) {
-                String name = file.getName();
+                //String name = file.getName();
                 String size = (file.length() / 1024) + " KB"; // Размер файла в KB
                 Date change =new Date(file.lastModified());
-                fileList.add(new FileInfo(name, size, change));
+                fileList.add(new FileInfo(file.getName(), size, change));
             }
         }
         TableView.setItems(fileList);
