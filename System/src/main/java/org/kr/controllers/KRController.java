@@ -469,7 +469,59 @@ public class KRController {
         }
     }
 
+    public void onBackButtonClick(ActionEvent actionEvent) {
+        String localPath = "";
+        int superAppIndex = nowPath.indexOf("/SuperApp");
+        int usbIndex = nowPath.indexOf(usbName);
 
+        // Определяем, какой из путей обрезать
+        if (superAppIndex != -1) {
+            // Обрезаем всё до "/SuperApp"
+            localPath = nowPath.substring(superAppIndex);
+            System.out.println("LocalPath (SuperApp): " + localPath);  // вывод: /SuperApp/folder/file.txt
+        } else if (usbIndex != -1) {
+            // Обрезаем всё до "/USB"
+            localPath = nowPath.substring(usbIndex);
+            localPath="/USB/"+localPath;
+            System.out.println("LocalPath (USB): " + localPath);  // вывод: /USB/folder/file.txt
+        } else {
+            System.out.println("Ни /SuperApp, ни /USB не найдены");
+            return;
+        }
+
+        // Логика обрезки до последнего слэша, если путь больше базового
+        if ((localPath.startsWith("/USB") && !localPath.equals("/USB/"+usbName)) ||
+                (localPath.startsWith("/SuperApp") && !localPath.equals("/SuperApp"))) {
+
+            // Находим последний слэш и обрезаем путь до него
+            int lastSlashIndex = nowPath.lastIndexOf("/");
+            int locallastSlashIndex = localPath.lastIndexOf("/");
+            if (lastSlashIndex != -1) {
+                nowPath = nowPath.substring(0, lastSlashIndex);  // Обрезаем строку до последнего слэша
+                localPath = localPath.substring(0,locallastSlashIndex);
+                System.out.println("nowPath после обрезки: " + nowPath);
+            }
+
+//            if (localPath.startsWith(usbName)){
+//                localPath="/USB/"+localPath;
+//                System.out.println("+USB");
+//            }
+            System.out.println("nowPath "+nowPath);
+            System.out.println("localPath "+ localPath);
+
+            // Обновляем текстовое поле Path и таблицу
+            Path.setText(localPath);  // Убедитесь, что здесь обновляется после изменения nowPath
+            File selectedFile = new File(nowPath);
+            populateTableView(selectedFile);
+        } else {
+            // Если путь равен "/USB" или "/SuperApp", то обновляем только Path
+            Path.setText(localPath);
+            System.out.println("Путь не может быть обрезан дальше: " + localPath);
+        }
+
+        // Дополнительная проверка для отслеживания обновлений
+        System.out.println("Path (после изменения): " + Path.getText());
+    }
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -739,9 +791,15 @@ public class KRController {
                             localPath = nowPath;
 
                             // Находим индекс "SuperApp" в пути и обрезаем его
-                            int index = localPath.indexOf("/SuperApp");
-                            if (index != -1) {
-                                localPath = nowPath.substring(index);
+                            int indexSuperApp = localPath.indexOf("/SuperApp");
+                            int indexUSB = localPath.indexOf(usbName);
+                            if (indexSuperApp != -1) {
+                                localPath = nowPath.substring(indexSuperApp);
+                                System.out.println(localPath);
+                            }
+                            if (indexUSB != -1) {
+                                localPath = nowPath.substring(indexUSB);
+                                localPath="/USB/"+localPath;
                                 System.out.println(localPath);
                             }
 
