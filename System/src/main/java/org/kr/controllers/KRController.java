@@ -18,6 +18,7 @@ import java.nio.file.*;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
@@ -469,60 +470,84 @@ public class KRController {
         }
     }
 
+    private Stack<String> backStack = new Stack<>(); // Стек для кнопки "назад"
+    private Stack<String> forwardStack = new Stack<>(); // Стек для кнопки "вперед"
+
+
+
     public void onBackButtonClick(ActionEvent actionEvent) {
+        // Сохраняем текущий путь в backStack перед его изменением
+        backStack.push(nowPath);
+
         String localPath = "";
         int superAppIndex = nowPath.indexOf("/SuperApp");
         int usbIndex = nowPath.indexOf(usbName);
 
-        // Определяем, какой из путей обрезать
+        // Логика определения, какой путь нужно обрезать
         if (superAppIndex != -1) {
-            // Обрезаем всё до "/SuperApp"
             localPath = nowPath.substring(superAppIndex);
-            System.out.println("LocalPath (SuperApp): " + localPath);  // вывод: /SuperApp/folder/file.txt
+            System.out.println("LocalPath (SuperApp): " + localPath);
         } else if (usbIndex != -1) {
-            // Обрезаем всё до "/USB"
             localPath = nowPath.substring(usbIndex);
-            localPath="/USB/"+localPath;
-            System.out.println("LocalPath (USB): " + localPath);  // вывод: /USB/folder/file.txt
+            localPath = "/USB/" + localPath;
+            System.out.println("LocalPath (USB): " + localPath);
         } else {
-            System.out.println("Ни /SuperApp, ни /USB не найдены");
+            System.out.println("Не найдено ни /SuperApp, ни /USB");
             return;
         }
 
-        // Логика обрезки до последнего слэша, если путь больше базового
-        if ((localPath.startsWith("/USB") && !localPath.equals("/USB/"+usbName)) ||
+        // Логика обрезки пути до последнего слэша
+        if ((localPath.startsWith("/USB") && !localPath.equals("/USB/" + usbName)) ||
                 (localPath.startsWith("/SuperApp") && !localPath.equals("/SuperApp"))) {
 
-            // Находим последний слэш и обрезаем путь до него
             int lastSlashIndex = nowPath.lastIndexOf("/");
-            int locallastSlashIndex = localPath.lastIndexOf("/");
             if (lastSlashIndex != -1) {
-                nowPath = nowPath.substring(0, lastSlashIndex);  // Обрезаем строку до последнего слэша
-                localPath = localPath.substring(0,locallastSlashIndex);
+                nowPath = nowPath.substring(0, lastSlashIndex); // Обрезаем путь
+                localPath = localPath.substring(0, localPath.lastIndexOf("/"));
                 System.out.println("nowPath после обрезки: " + nowPath);
             }
-
-//            if (localPath.startsWith(usbName)){
-//                localPath="/USB/"+localPath;
-//                System.out.println("+USB");
-//            }
-            System.out.println("nowPath "+nowPath);
-            System.out.println("localPath "+ localPath);
-
-            // Обновляем текстовое поле Path и таблицу
-            Path.setText(localPath);  // Убедитесь, что здесь обновляется после изменения nowPath
+            Path.setText(localPath); // Обновляем текстовое поле
             File selectedFile = new File(nowPath);
-            populateTableView(selectedFile);
+            populateTableView(selectedFile); // Обновляем таблицу
         } else {
-            // Если путь равен "/USB" или "/SuperApp", то обновляем только Path
             Path.setText(localPath);
             System.out.println("Путь не может быть обрезан дальше: " + localPath);
         }
 
-        // Дополнительная проверка для отслеживания обновлений
         System.out.println("Path (после изменения): " + Path.getText());
     }
 
+    public void onForwardButtonClick(ActionEvent actionEvent) {
+        if (!backStack.isEmpty()) {
+            String previousPath = backStack.pop(); // Извлекаем последний путь из backStack
+            nowPath = previousPath; // Устанавливаем его как текущий путь
+
+            // Логика для обновления localPath
+            String localPath = "";
+            int superAppIndex = nowPath.indexOf("/SuperApp");
+            int usbIndex = nowPath.indexOf(usbName);
+
+            if (superAppIndex != -1) {
+                localPath = nowPath.substring(superAppIndex);
+                System.out.println("LocalPath (SuperApp): " + localPath);
+            } else if (usbIndex != -1) {
+                localPath = nowPath.substring(usbIndex);
+                localPath = "/USB/" + localPath;
+                System.out.println("LocalPath (USB): " + localPath);
+            } else {
+                System.out.println("Не найдено ни /SuperApp, ни /USB");
+                return;
+            }
+
+            // Обновляем интерфейс
+            Path.setText(localPath);
+            File selectedFile = new File(nowPath);
+            populateTableView(selectedFile); // Обновляем таблицу
+            System.out.println("Path (после изменения на вперёд): " + Path.getText());
+        } else {
+            System.out.println("Нет доступных путей для вперёд.");
+        }
+    }
 
 //---------------------------------------------------------------------------------------------------------------------
     //работа с подгрузкой данных в окно

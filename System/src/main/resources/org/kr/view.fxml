@@ -110,7 +110,7 @@
                                 <Button id="Search" fx:id="Search" layoutX="990.0" layoutY="10.0" mnemonicParsing="false" onAction="#onSearchButtonClick" prefHeight="30.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: white; -fx-border-color: #464451;" text="Поиск" />
                                 <TextField id="Name" fx:id="Name" layoutX="822.0" layoutY="11.0" onAction="#onNameEnter" prefHeight="30.0" prefWidth="154.0" promptText="Имя файла" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #464451;" />
                                 <Button id="Back" fx:id="Back" layoutX="20.0" layoutY="11.0" mnemonicParsing="false" onAction="#onBackButtonClick" prefHeight="30.0" prefWidth="30.0" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-background-color: white; -fx-border-color: black;" text="&lt;" />
-                                <Button id="Forward" fx:id="Forward" layoutX="69.0" layoutY="11.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-background-color: white; -fx-border-color: black;" text="&gt;" />
+                                <Button id="Forward" fx:id="Forward" layoutX="69.0" layoutY="11.0" mnemonicParsing="false" onAction="#onForwardButtonClick" prefHeight="30.0" prefWidth="30.0" style="-fx-background-radius: 15; -fx-border-radius: 15; -fx-background-color: white; -fx-border-color: black;" text="&gt;" />
                             </children>
                         </AnchorPane>
                     </children>
