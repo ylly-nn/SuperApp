@@ -16,8 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.Stack;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
@@ -549,6 +547,38 @@ public class KRController {
         }
     }
 
+    public void onpopUpMenuOpenMenuItemClick(ActionEvent actionEvent) {
+        AlgoritmOpen();
+    }
+
+    public void onpopUpMenuCopyMenuItemClick(ActionEvent actionEvent) throws IOException {
+        System.out.println("copy"+AlgoritmPath());
+        Working_with_files.copyTableView(AlgoritmPath());
+        System.out.println(Working_with_files.sourceFile);
+    }
+
+    public void onpopUpMenuPasteMenuItemClick(ActionEvent actionEvent) throws IOException {
+        Working_with_files.pasteTableView(AlgoritmPathDirectory());
+        System.out.println(Working_with_files.sourceFile);
+        System.out.println(Working_with_files.destinationFile);
+    }
+
+    public void onpopUpMenuDeleteMenuItemClick(ActionEvent actionEvent) throws IOException {
+        Working_with_files.deleteTableView(AlgoritmPath());
+
+    }
+
+    public void onpopUpMenuDeleteTrashMenuItemClick(ActionEvent actionEvent) throws IOException {
+        Working_with_files.moveToTrash(AlgoritmPath());
+    }
+
+    public void onpopUpMenuCreateFolderMenuItemClick(ActionEvent actionEvent) throws IOException {
+        Working_with_files.createDirectory(AlgoritmPathDirectory());
+    }
+
+    public void onpopUpMenuCreateFileMenuItemClick(ActionEvent actionEvent) {
+        Working_with_files.createFile(AlgoritmPathDirectory());
+    }
 //---------------------------------------------------------------------------------------------------------------------
     //работа с подгрузкой данных в окно
 
@@ -592,6 +622,8 @@ public class KRController {
 
     @FXML
     public void initialize() throws IOException, InterruptedException {
+
+
 
         // Инициализация TreeView
      //   System.out.println(directoryPath);
@@ -723,7 +755,8 @@ public class KRController {
                         populateTableView(selectedDirectory);
                     }
                 }
-            }}
+            }
+        }
         );
 
 
@@ -743,101 +776,7 @@ public class KRController {
 
             // Обработка двойного клика
             if (event.getClickCount() == 2) {
-                String localPath = "";
-                System.out.println("Двойной клик"); // Двойной клик
-
-                // Получаем выбранный элемент
-                FileInfo selectedItem = TableView.getSelectionModel().getSelectedItem();
-//                System.out.println(selectedItem.name);
-//                Working_with_files.openTableView("/home/ylly/"+selectedItem.name);
-
-
-                if (selectedItem != null) {
-                    if (selectedItem.name.startsWith("/SuperApp")) {
-                        String output = selectedItem.name.substring("/SuperApp".length());
-                        File selectedFile = new File(directoryPath + output);
-                        if (selectedFile.isDirectory()) {
-                            nowPath = selectedFile.getPath();
-                            localPath = nowPath;
-
-                            // Находим индекс "SuperApp" в пути и обрезаем его
-                            int index = localPath.indexOf("/SuperApp");
-                            if (index != -1) {
-                                localPath = nowPath.substring(index);
-                                System.out.println(localPath);
-                            }
-
-                            // Обновляем текстовое поле Path и таблицу
-                            Path.setText(localPath);
-                            populateTableView(selectedFile);
-                        } else {
-                            System.out.println(selectedFile.getPath());
-                            // Если это файл, открываем его с помощью программы по умолчанию
-                            Working_with_files.openTableView(selectedFile.getPath());
-                        }
-                        // Выводим результат
-                    } else if (selectedItem.name.startsWith("/USB")) {
-                        System.out.println("Строка начинается с /USB");
-                        String output = selectedItem.name.substring("/USB/".length());
-                        File selectedFile = new File(mediaDirectoryPath + output);
-                        if (selectedFile.isDirectory()) {
-                            nowPath = selectedFile.getPath();
-                            localPath = nowPath;
-
-                            // Находим индекс "SuperApp" в пути и обрезаем его
-                            int index = localPath.indexOf("/"+usbName);
-                            if (index != -1) {
-                                localPath = nowPath.substring(index);
-                                System.out.println(localPath);
-                            }
-                            localPath="/USB"+localPath;
-
-                            // Обновляем текстовое поле Path и таблицу
-                            Path.setText(localPath);
-                            populateTableView(selectedFile);
-                        } else {
-                            System.out.println(selectedFile.getPath());
-                            // Если это файл, открываем его с помощью программы по умолчанию
-                            Working_with_files.openTableView(selectedFile.getPath());
-                        }
-
-                    }
-                    // Формируем путь к выбранному файлу/папке
-                else {
-                        // Формируем путь к выбранному файлу/папке
-                        File selectedFile = new File(nowPath + "/" + selectedItem.getName());
-
-                        System.out.println(selectedFile.getPath());
-                        System.out.println(selectedFile.toString());
-
-                        // Если это папка, обновляем отображение в TableView
-                        if (selectedFile.isDirectory()) {
-                            nowPath = selectedFile.getPath();
-                            localPath = nowPath;
-
-                            // Находим индекс "SuperApp" в пути и обрезаем его
-                            int indexSuperApp = localPath.indexOf("/SuperApp");
-                            int indexUSB = localPath.indexOf(usbName);
-                            if (indexSuperApp != -1) {
-                                localPath = nowPath.substring(indexSuperApp);
-                                System.out.println(localPath);
-                            }
-                            if (indexUSB != -1) {
-                                localPath = nowPath.substring(indexUSB);
-                                localPath="/USB/"+localPath;
-                                System.out.println(localPath);
-                            }
-
-                            // Обновляем текстовое поле Path и таблицу
-                            Path.setText(localPath);
-                            populateTableView(selectedFile);
-                        } else {
-                            System.out.println(selectedFile.getPath());
-                            // Если это файл, открываем его с помощью программы по умолчанию
-                            Working_with_files.openTableView(selectedFile.getPath());
-                        }
-                    }
-                }
+                AlgoritmOpen();
             }
         });
 
@@ -869,6 +808,8 @@ public class KRController {
         });
         thread.setDaemon(true);
         thread.start();
+
+
 
     }
 
@@ -992,6 +933,168 @@ public class KRController {
     public static Long getPid44(){
         return Pid44;
     }
+
+    public void AlgoritmOpen(){
+        String localPath = "";// Двойной клик
+
+        // Получаем выбранный элемент
+        FileInfo selectedItem = TableView.getSelectionModel().getSelectedItem();
+//                System.out.println(selectedItem.name);
+//                Working_with_files.openTableView("/home/ylly/"+selectedItem.name);
+
+
+        if (selectedItem != null) {
+            if (selectedItem.name.startsWith("/SuperApp")) {
+                String output = selectedItem.name.substring("/SuperApp".length());
+                File selectedFile = new File(directoryPath + output);
+                if (selectedFile.isDirectory()) {
+                    nowPath = selectedFile.getPath();
+                    localPath = nowPath;
+
+                    // Находим индекс "SuperApp" в пути и обрезаем его
+                    int index = localPath.indexOf("/SuperApp");
+                    if (index != -1) {
+                        localPath = nowPath.substring(index);
+                        System.out.println(localPath);
+                    }
+
+                    // Обновляем текстовое поле Path и таблицу
+                    Path.setText(localPath);
+                    populateTableView(selectedFile);
+                } else {
+                    System.out.println(selectedFile.getPath());
+                    // Если это файл, открываем его с помощью программы по умолчанию
+                    Working_with_files.openTableView(selectedFile.getPath());
+                }
+                // Выводим результат
+            } else if (selectedItem.name.startsWith("/USB")) {
+                System.out.println("Строка начинается с /USB");
+                String output = selectedItem.name.substring("/USB/".length());
+                File selectedFile = new File(mediaDirectoryPath + output);
+                if (selectedFile.isDirectory()) {
+                    nowPath = selectedFile.getPath();
+                    localPath = nowPath;
+
+                    // Находим индекс "SuperApp" в пути и обрезаем его
+                    int index = localPath.indexOf("/"+usbName);
+                    if (index != -1) {
+                        localPath = nowPath.substring(index);
+                        System.out.println(localPath);
+                    }
+                    localPath="/USB"+localPath;
+
+                    // Обновляем текстовое поле Path и таблицу
+                    Path.setText(localPath);
+                    populateTableView(selectedFile);
+                } else {
+                    System.out.println(selectedFile.getPath());
+                    // Если это файл, открываем его с помощью программы по умолчанию
+                    Working_with_files.openTableView(selectedFile.getPath());
+                }
+
+            }
+            // Формируем путь к выбранному файлу/папке
+            else {
+                // Формируем путь к выбранному файлу/папке
+                File selectedFile = new File(nowPath + "/" + selectedItem.getName());
+
+                System.out.println(selectedFile.getPath());
+                System.out.println(selectedFile.toString());
+
+                // Если это папка, обновляем отображение в TableView
+                if (selectedFile.isDirectory()) {
+                    nowPath = selectedFile.getPath();
+                    localPath = nowPath;
+
+                    // Находим индекс "SuperApp" в пути и обрезаем его
+                    int indexSuperApp = localPath.indexOf("/SuperApp");
+                    int indexUSB = localPath.indexOf(usbName);
+                    if (indexSuperApp != -1) {
+                        localPath = nowPath.substring(indexSuperApp);
+                        System.out.println(localPath);
+                    }
+                    if (indexUSB != -1) {
+                        localPath = nowPath.substring(indexUSB);
+                        localPath="/USB/"+localPath;
+                        System.out.println(localPath);
+                    }
+
+                    // Обновляем текстовое поле Path и таблицу
+                    Path.setText(localPath);
+                    populateTableView(selectedFile);
+                } else {
+                    System.out.println(selectedFile.getPath());
+                    // Если это файл, открываем его с помощью программы по умолчанию
+                    Working_with_files.openTableView(selectedFile.getPath());
+                }
+            }
+        }
+    }
+
+    public String AlgoritmPath(){
+
+        // Получаем выбранный элемент
+        FileInfo selectedItem = TableView.getSelectionModel().getSelectedItem();
+//                System.out.println(selectedItem.name);
+//                Working_with_files.openTableView("/home/ylly/"+selectedItem.name);
+
+
+        if (selectedItem != null) {
+
+            if (selectedItem.name.startsWith("/SuperApp")) {
+                if (selectedItem.name.startsWith("/SuperApp/System")){
+                    return "";
+                }
+                String output = selectedItem.name.substring("/SuperApp".length());
+                    return directoryPath+output;
+                }
+                // Выводим результат
+             else if (selectedItem.name.startsWith("/USB")) {
+                System.out.println("Строка начинается с /USB");
+                String output = selectedItem.name.substring("/USB/".length());
+                    // Если это файл, открываем его с помощью программы по умолчанию
+                    return mediaDirectoryPath + output;
+
+            }
+            // Формируем путь к выбранному файлу/папке
+            else {
+                // Формируем путь к выбранному файлу/папке
+                if ((nowPath.contains("/SuperApp/System"))||selectedItem.name.equals("System")){
+                    return "";
+                }
+                return nowPath + "/" + selectedItem.getName();
+
+                }
+            }
+
+        return "";
+    }
+
+    public String AlgoritmPathDirectory() {
+
+        // Получаем выбранный элемент
+        FileInfo selectedItem = TableView.getSelectionModel().getSelectedItem();
+//                System.out.println(selectedItem.name);
+//                Working_with_files.openTableView("/home/ylly/"+selectedItem.name);
+        if (Path.getText().startsWith("/SuperApp")) {
+            if (Path.getText().startsWith("/SuperApp/System")){
+                return "";
+            }
+            String output = Path.getText().substring("/SuperApp".length());
+            return directoryPath + output;
+        }
+        // Выводим результат
+        else if (Path.getText().startsWith("/USB")) {
+            System.out.println("Строка начинается с /USB");
+            String output = Path.getText().substring("/USB/".length());
+            // Если это файл, открываем его с помощью программы по умолчанию
+            return mediaDirectoryPath + output;
+
+        }
+        return "";
+    }
+
+
 
 
     }

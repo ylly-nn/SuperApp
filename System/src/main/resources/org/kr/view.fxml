@@ -44,12 +44,14 @@
                <contextMenu>
                   <ContextMenu fx:id="popUpMenu" onAction="#onLeftMouseButtonClick">
                      <items>
-                         <MenuItem fx:id="popUpMenuOpen" text="Открыть" />
-                         <MenuItem fx:id="popUpMenuCopy" text="Скопировать" />
-                         <MenuItem fx:id="popUpMenuDeletePermanent" text="Удалить безвозвратно" />
-                         <MenuItem fx:id="popUpMenuDeleteTrash" text="Удалить в корзину" />
-                         <MenuItem fx:id="popUpMenuCreateFolder" text="Создать папку" />
-                         <MenuItem fx:id="popUpMenuCreateFile" text="Создать файл" />
+<!--                         <MenuItem fx:id="LocalTerminal" mnemonicParsing="false" onAction="#onLocalTerminalMenuItemClick" text="Локальный терминал" />-->
+                         <MenuItem fx:id="popUpMenuOpen" mnemonicParsing="false" onAction="#onpopUpMenuOpenMenuItemClick" text="Открыть" />
+                         <MenuItem fx:id="popUpMenuCopy" mnemonicParsing="false" onAction="#onpopUpMenuCopyMenuItemClick" text="Скопировать" />
+                         <MenuItem fx:id="popUpMenuPaste" mnemonicParsing="false" onAction="#onpopUpMenuPasteMenuItemClick" text="Вставить" />
+                         <MenuItem fx:id="popUpMenuDeletePermanent" mnemonicParsing="false" onAction="#onpopUpMenuDeleteMenuItemClick" text="Удалить безвозвратно" />
+                         <MenuItem fx:id="popUpMenuDeleteTrash" mnemonicParsing="false" onAction="#onpopUpMenuDeleteTrashMenuItemClick" text="Удалить в корзину" />
+                         <MenuItem fx:id="popUpMenuCreateFolder" mnemonicParsing="false" onAction="#onpopUpMenuCreateFolderMenuItemClick" text="Создать папку" />
+                         <MenuItem fx:id="popUpMenuCreateFile" mnemonicParsing="false" onAction="#onpopUpMenuCreateFileMenuItemClick" text="Создать файл" />
                      </items>
                   </ContextMenu>
                </contextMenu>
