@@ -4,7 +4,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.kr.controllers.KRController;
 import org.kr.controllers.TerminalController;
+import org.kr.metods.Working_with_files;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -34,19 +36,7 @@ public class KRapplication extends javafx.application.Application {
 
 
 
-        //Описание горячих клавиш
-        scene.setOnKeyPressed(event -> {
-            if(event.isControlDown() && event.getCode() == KeyCode.T)
-            {
-                    System.out.println("Открытие терминала");
-                try {
-                    TerminalController.openTerminalWindow();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
 
-        });
     }
 
 

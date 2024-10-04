@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import org.kr.metods.Tasks;
 import org.kr.metods.TaskСonnection;
 import org.kr.metods.Utilites;
@@ -758,6 +759,43 @@ public class KRController {
             }
         }
         );
+
+        TableView.setOnKeyPressed(event -> {
+                    if(event.isControlDown() && event.getCode() == KeyCode.T) {
+                        System.out.println("Открытие терминала");
+                        try {
+                            TerminalController.openTerminalWindow();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                        if(event.isControlDown() && event.getCode() == KeyCode.C)
+                        {
+                            System.out.println("Открытие терминала");
+                            try {
+                                Working_with_files.copyTableView(AlgoritmPath());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
+                        if(event.isControlDown() && event.getCode() == KeyCode.V)
+                        {
+                            System.out.println("Открытие терминала");
+                            Working_with_files.pasteTableView(AlgoritmPathDirectory());
+                        }
+            if(event.isControlDown() && event.getCode() == KeyCode.D)
+            {
+                System.out.println("Открытие терминала");
+                Working_with_files.createDirectory(AlgoritmPathDirectory());
+            }
+            if(event.isControlDown() && event.getCode() == KeyCode.F)
+            {
+                System.out.println("Открытие терминала");
+                Working_with_files.createFile(AlgoritmPathDirectory());
+            }
+                    });
 
 
 
