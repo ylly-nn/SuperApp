@@ -807,7 +807,6 @@ public class KRController {
                 TreeItem<String> item = new TreeItem<>(file.getName());
                 rootItem.getChildren().add(item);
                 // Логирование имени добавленного файла или папки
-                System.out.println("Добавление в TreeView: " + file.getName());
                 if (file.isDirectory()) {
                     populateTreeView(file, item);
                 }
@@ -828,11 +827,10 @@ public class KRController {
                 Date change = new Date(file.lastModified());
                 fileList.add(new FileInfo(file.getName(), size, change));
                 // Логирование добавленных файлов в таблицу
-                System.out.println("Добавление в TableView: " + file.getName() + " (размер: " + size + ", изменен: " + change + ")");
             }
         } else {
             // Логирование ошибки чтения директории
-            System.out.println("Ошибка: Не удалось прочитать содержимое директории для таблицы: " + directory.getAbsolutePath());
+
         }
         TableView.setItems(fileList);
     }
@@ -843,7 +841,6 @@ public class KRController {
         File folder = new File(relativePath);
         String basePath = folder.getAbsolutePath();
         // Логирование полного пути
-        System.out.println("Полный путь до папки: " + basePath);
         return basePath;
     }
 
@@ -931,15 +928,13 @@ public class KRController {
         FileInfo selectedItem = TableView.getSelectionModel().getSelectedItem();
 
         if (selectedItem != null) {
-            // Логируем выбранный элемент
-            System.out.println("Выбранный элемент: " + selectedItem.name);
+
+
 
             if (selectedItem.name.startsWith("/SuperApp")) {
                 String output = selectedItem.name.substring("/SuperApp".length());
                 File selectedFile = new File(directoryPath + output);
 
-                // Логируем путь к выбранному файлу/папке
-                System.out.println("Путь к файлу/папке (SuperApp): " + selectedFile.getPath());
 
                 if (selectedFile.isDirectory()) {
                     nowPath = selectedFile.getPath();
@@ -949,19 +944,19 @@ public class KRController {
                     int index = localPath.indexOf("/SuperApp");
                     if (index != -1) {
                         localPath = nowPath.substring(index);
-                        System.out.println("Обрезанный путь: " + localPath);
+
                     }
 
                     // Обновляем текстовое поле Path и таблицу
                     Path.setText(localPath);
                     populateTableView(selectedFile);
                 } else {
-                    System.out.println("Открытие файла: " + selectedFile.getPath());
+
                     Working_with_files.openTableView(selectedFile.getPath());
                 }
 
             } else if (selectedItem.name.startsWith("/USB")) {
-                System.out.println("Строка начинается с /USB");
+
                 String output = selectedItem.name.substring("/USB/".length());
                 File selectedFile = new File(mediaDirectoryPath + output);
 
